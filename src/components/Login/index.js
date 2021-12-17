@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
 
 function Login(props) {
     return (
@@ -33,7 +34,16 @@ function Login(props) {
     )
 }
 
-export default Login
+
+const mapStateToProps = (state) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch) => ({
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const Container = styled.div`
 
