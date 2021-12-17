@@ -2,10 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import {signInAPI} from '../../actions/index'
+import {Route} from "react-router"
 
 function Login(props) {
     return (
         <Container>
+            {
+                console.log(props)
+
+            }
             <Nav>
                 <a href="/">
                     <img src="/images/login-logo.svg"/>
@@ -37,7 +42,9 @@ function Login(props) {
 
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        
+    };
 };
 
 const mapDispatchToProps = (dispatch) => ({
