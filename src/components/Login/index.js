@@ -1,19 +1,55 @@
 import React from 'react'
 import styled from 'styled-components'
-import { connect } from 'react-redux'
-import {signInAPI} from '../../actions/index'
-import {Route} from "react-router"
+import { Route } from "react-router"
+import { useNavigate } from "react-router-dom";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth, provider } from '../../config/firebase'
+import { useSelector, useDispatch } from 'react-redux'
+import { userCondition } from '../../slices/signInSlice'
 
 function Login(props) {
+    let navigate = useNavigate();
+
+    const userState = useSelector((state) => state.userState.user)
+    const dispatch = useDispatch()
+
+    const signIn = () => {
+        console.log('clicked')
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                console.log(user)
+                dispatch(userCondition(user))
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                console.log(errorCode, errorMessage, email, credential)
+                // ...
+            });
+    }
+
+
+    console.log('userState====>>>', userState)
+
     return (
         <Container>
             {
-                console.log(props)
-
+                userState && 
+                navigate("/home")
             }
             <Nav>
                 <a href="/">
-                    <img src="/images/login-logo.svg"/>
+                    <img src="/images/login-logo.svg" />
                 </a>
                 <div>
                     <Join>
@@ -27,10 +63,10 @@ function Login(props) {
             <Section>
                 <Hero>
                     <h1>Welcome to your professional community</h1>
-                    <img src="/images/login-hero.svg"  />
+                    <img src="/images/login-hero.svg" />
                 </Hero>
                 <Form>
-                    <Google onClick={()=> props.signIn()}>
+                    <Google onClick={() => signIn()}>
                         <img src="/images/google.svg" />
                         Sign in with Google
                     </Google>
@@ -40,18 +76,7 @@ function Login(props) {
     )
 }
 
-
-const mapStateToProps = (state) => {
-    return {
-        
-    };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    signIn : () => dispatch(signInAPI()),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
 
 const Container = styled.div`
 
