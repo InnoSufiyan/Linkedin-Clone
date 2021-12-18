@@ -2,8 +2,20 @@ import styled from "styled-components";
 import Leftside from "../Leftside";
 import Main from "../Main";
 import Rightside from "../Rightside";
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Home = (props) => {
+  let navigate = useNavigate();
+  const userState = useSelector((state) => state.userState.user)
+
+
+  useEffect(() => {
+    !userState && navigate("/")
+  })
+
+
   return (
     <Container>
       <Section>

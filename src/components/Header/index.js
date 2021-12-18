@@ -1,87 +1,111 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from '../../config/firebase'
+
+import { userCondition } from '../../slices/signInSlice'
 
 
 export default function Header() {
-    return (
-        <Container>
-            <Content>
-                <Logo>
-                    <a href="/home">
-                        <img src="/images/home-logo.svg" />
-                    </a>
-                </Logo>
-                <Search>
-                    <div>
-                        <input type="text" placeholder="search" />
-                    </div>
-                    <SearchIcon>
-                        <img src="/images/search-icon.svg" alt="" />
-                    </SearchIcon>
-                </Search>
-                <Nav>
-                    <NavListWrap>
-                        <NavList className="active">
-                            <a>
-                                <img src="/images/nav-home.svg" alt="" />
-                                <span>Home</span>
-                            </a>
-                        </NavList>
+  let navigate = useNavigate();
 
-                        <NavList>
-                            <a>
-                                <img src="/images/nav-network.svg" alt="" />
-                                <span>My Network</span>
-                            </a>
-                        </NavList>
+  const userState = useSelector((state) => state.userState.user)
+  const dispatch = useDispatch()
 
-                        <NavList>
-                            <a>
-                                <img src="/images/nav-jobs.svg" alt="" />
-                                <span>Jobs</span>
-                            </a>
-                        </NavList>
+  const signingOut = () => {
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      dispatch(userCondition(null))
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
 
-                        <NavList>
-                            <a>
-                                <img src="/images/nav-messaging.svg" alt="" />
-                                <span>Messaging</span>
-                            </a>
-                        </NavList>
 
-                        <NavList>
-                            <a>
-                                <img src="/images/nav-notifications.svg" alt="" />
-                                <span>Notifications</span>
-                            </a>
-                        </NavList>
+  return (
+    <Container>
+      <Content>
+        <Logo>
+          <a href="/home">
+            <img src="/images/home-logo.svg" />
+          </a>
+        </Logo>
+        <Search>
+          <div>
+            <input type="text" placeholder="search" />
+          </div>
+          <SearchIcon>
+            <img src="/images/search-icon.svg" alt="" />
+          </SearchIcon>
+        </Search>
+        <Nav>
+          <NavListWrap>
+            <NavList className="active">
+              <a>
+                <img src="/images/nav-home.svg" alt="" />
+                <span>Home</span>
+              </a>
+            </NavList>
 
-                        <User>
-                            <a>
-                                <img src="/images/user.svg" alt="" />
-                                <span>Me</span>
-                                <img src="/images/down-icon.svg" alt="" />
-                            </a>
+            <NavList>
+              <a>
+                <img src="/images/nav-network.svg" alt="" />
+                <span>My Network</span>
+              </a>
+            </NavList>
 
-                            <SignOut>
-                                <a>Sign Out</a>
-                            </SignOut>
-                        </User>
+            <NavList>
+              <a>
+                <img src="/images/nav-jobs.svg" alt="" />
+                <span>Jobs</span>
+              </a>
+            </NavList>
 
-                        <Work>
-                            <a>
-                                <img src="/images/nav-work.svg" alt="" />
-                                <span>
-                                    Work
-                                    <img src="/images/down-icon.svg" alt="" />
-                                </span>
-                            </a>
-                        </Work>
-                    </NavListWrap>
-                </Nav>
-            </Content>
-        </Container>
-    )
+            <NavList>
+              <a>
+                <img src="/images/nav-messaging.svg" alt="" />
+                <span>Messaging</span>
+              </a>
+            </NavList>
+
+            <NavList>
+              <a>
+                <img src="/images/nav-notifications.svg" alt="" />
+                <span>Notifications</span>
+              </a>
+            </NavList>
+
+            <User>
+              <a>
+                {userState ? (<img src={userState.photoURL} alt="" />) : (<img src="/images/user.svg" alt="" />)}
+
+                <span>Me
+                  <img src="/images/down-icon.svg" alt="" />
+                </span>
+              </a>
+
+              <SignOut onClick={signingOut}>
+                <a>Sign Out</a>
+              </SignOut>
+            </User>
+
+            <Work>
+              <a>
+                <img src="/images/nav-work.svg" alt="" />
+                <span>
+                  Work
+                  <img src="/images/down-icon.svg" alt="" />
+                </span>
+              </a>
+            </Work>
+          </NavListWrap>
+        </Nav>
+      </Content>
+    </Container>
+  )
 }
 
 
